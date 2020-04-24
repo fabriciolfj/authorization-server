@@ -1,0 +1,17 @@
+http://localhost:8081/oauth/authorize?response_type=code&client_id=foodanalytics&state=abc&redirect_uri=http://aplicacao-cliente
+http://localhost:8081/oauth/authorize?response_type=token&client_id=mobile&state=abc&redirect_uri=http://aplicacao-cliente
+
+
+
+pkce plain
+code verifier: teste123
+code challenge: teste123
+
+http://localhost:8081/oauth/authorize?response_type=code&client_id=foodanalytics&state=abc&redirect_uri=http://localhost:8082&code_challenge=teste123&code_challenge_method=plain
+
+pkce sha256
+https://tonyxu-io.github.io/pkce-generator/
+code verifier: teste123
+code challenge: base64url(sha256(teste123)) KJFg2w2fOfmuF1TE7JwW-QtQ4y4JxftUga5kKz09GjY
+
+http://localhost:8081/oauth/authorize?response_type=code&client_id=foodanalytics&state=abc&redirect_uri=http://localhost:8082&code_challenge=teste123&code_challenge_method=s256
