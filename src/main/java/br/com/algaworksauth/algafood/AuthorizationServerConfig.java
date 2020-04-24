@@ -47,7 +47,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     .authorizedGrantTypes("implicit")
                     .scopes("write", "read")
                     .redirectUris("http://aplicacao-cliente:8082")
-                    .accessTokenValiditySeconds(60)
+                    .accessTokenValiditySeconds(60 * 60 *60 *60)
                 .and()
                     .withClient("checktoken")
                     .secret(passwordEncoder.encode("123"))
