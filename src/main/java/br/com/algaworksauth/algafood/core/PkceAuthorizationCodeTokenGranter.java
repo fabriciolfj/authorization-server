@@ -1,4 +1,4 @@
-package br.com.algaworksauth.algafood;
+package br.com.algaworksauth.algafood.core;
 
 
 import java.security.MessageDigest;

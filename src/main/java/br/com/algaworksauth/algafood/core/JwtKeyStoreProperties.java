@@ -1,4 +1,4 @@
-package br.com.algaworksauth.algafood;
+package br.com.algaworksauth.algafood.core;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,4 +1,4 @@
-package br.com.algaworksauth.algafood;
+package br.com.algaworksauth.algafood.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //configurando os usuarios
-    @Override
+    //configurando os usuarios em memoria
+    /*@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("fabricio")
@@ -25,7 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .withUser("joao")
                     .password(passwordEncoder().encode("123"))
                     .roles("ADMIN");
-    }
+    }*/
 
     /*@Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -50,9 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManager();
     }
 
-    @Bean
+    /*@Bean
     @Override
     protected UserDetailsService userDetailsService() {
         return super.userDetailsService();
-    }
+    }*/
 }

@@ -1,4 +1,4 @@
-package br.com.algaworksauth.algafood;
+package br.com.algaworksauth.algafood.core;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

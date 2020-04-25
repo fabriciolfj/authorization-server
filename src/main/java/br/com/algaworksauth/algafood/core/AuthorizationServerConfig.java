@@ -1,4 +1,4 @@
-package br.com.algaworksauth.algafood;
+package br.com.algaworksauth.algafood.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
