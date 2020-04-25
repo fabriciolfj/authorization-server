@@ -1,8 +1,9 @@
 package br.com.algaworksauth.algafood;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,8 +14,11 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import java.util.Arrays;
 
@@ -32,7 +36,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private RedisConnectionFactory connectionFactory;
+    private JwtKeyStoreProperties keyStoreProperties;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -42,7 +46,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     .secret(passwordEncoder.encode("123"))
                     .authorizedGrantTypes("password", "refresh_token")
                     .scopes("write", "read")
-                    .accessTokenValiditySeconds(60)
+                    .accessTokenValiditySeconds(60000)
                     .refreshTokenValiditySeconds(60 * 6)
                 .and()
                     .withClient("foodanalytics")
@@ -63,7 +67,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     .secret(passwordEncoder.encode("123"))
                     .authorizedGrantTypes("password", "refresh_token")
                     .scopes("write", "read")
-                    .accessTokenValiditySeconds(60)
+                    .accessTokenValiditySeconds(60000)
                     .refreshTokenValiditySeconds(60 * 6)
                 .and()
                     .withClient("faturamento")
@@ -76,19 +80,43 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
                 .authenticationManager(authenticationManager)
-                .tokenStore(redisTokenStore())
                 .userDetailsService(userDetailsService)
+                .accessTokenConverter(jwtAccessTokenConverter())
+                .approvalStore(approvalStore(endpoints.getTokenStore()))// deve chamar dp do acesstokenconverter, para dar permissao granular no fluxo authorization token (mostra os
+                //radio button de write e read
                 .tokenGranter(tokenGranter(endpoints));
                 //.reuseRefreshTokens(false);
     }
 
-    private TokenStore redisTokenStore() {
-        return new RedisTokenStore(connectionFactory);
+    private ApprovalStore approvalStore(TokenStore tokenStore) {
+        var approvalStore = new TokenApprovalStore();
+        approvalStore.setTokenStore(tokenStore);
+
+        return approvalStore;
+    }
+
+    @Bean
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
+        //jwtAccessTokenConverter.setSigningKey("823978924982309820982390weiojroiwejklsjlkfdsfs3223424242");// usa o hmeksha-256
+
+        var jksResource = new ClassPathResource(keyStoreProperties.getPath());
+        var keyStorePass = keyStoreProperties.getPassword();
+        var keyPairAlias = keyStoreProperties.getKeypairAlias();
+
+        var keyStoreKeyFactory = new KeyStoreKeyFactory(jksResource, keyStorePass.toCharArray());
+        var keyPair = keyStoreKeyFactory.getKeyPair(keyPairAlias);
+
+        jwtAccessTokenConverter.setKeyPair(keyPair);
+
+        return jwtAccessTokenConverter;
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.checkTokenAccess("permitAll()");  //precisa estar autenticado para acessar o check token, permitAll() para náo precisar de autenticação, isAuthenticated() precisa estar autenticado
+        security.checkTokenAccess("permitAll()")
+        .tokenKeyAccess("permitAll()"); //export a chave publica
+        //precisa estar autenticado para acessar o check token, permitAll() para náo precisar de autenticação, isAuthenticated() precisa estar autenticado
        // .allowFormAuthenticationForClients() para autenticar no form-urlencoded no post colocando o client_id e client_secret
     }
 

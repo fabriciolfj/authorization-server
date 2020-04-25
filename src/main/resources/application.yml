@@ -1,8 +1,9 @@
 server:
   port: 8081
 
-spring:
-  redis:
-    port: 6379
-    host: localhost
-    password:
+algafood:
+  jwt:
+    keystore:
+      path: keystores/algafood.jks
+      password: 123456
+      keypair-alias: algafood

@@ -24,3 +24,23 @@ Descritivo:
 * backend quarda esse code
 * quando o client for solicitar o access token (aonde passa o code), ele tem que mandar o code verifier
 * backend valida o code verifier , pega o codigo roda o algoritimo sha256, converte para base64, o resultado compara com o code challenge guardado, se for igual manda o token access, se for diferente nega.
+
+
+Gerando um arquivo JKS com um par de chaves
+```
+keytool -genkeypair -alias algafood -keyalg RSA -keypass 123456 -keystore algafood.jks -storepass 123456 -validity 3650
+```
+Listando as entradas de um arquivo JKS
+```
+keytool -list -keystore algafood.jks
+```
+
+
+Gerando o certificado
+```
+keytool -export -rfc -alias algafood -keystore algafood.jks -file algafood-cert.pem
+```
+Gerando a chave pública
+```
+openssl x509 -pubkey -noout -in algafood-cert.pem > algafood-pkey.pem
+```
