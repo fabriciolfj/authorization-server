@@ -5,7 +5,7 @@ Client credentials grant -> pega o token com base no nome do client, sem necessi
 
 Exemplo authorization code: 
 ```
-http://localhost:8081/oauth/authorize?response_type=code&client_id=foodanalytics&state=abc&redirect_uri=http://aplicacao-cliente
+http://localhost:8081/oauth/authorize?response_type=code&client_id=foodanalytics&state=MC44OTE5NTg5MzY2NTY2OTk2&redirect_uri=http://localhost:8082
 ```
 
 Implicit Grant -> é similar ao authorization_code, mas ele não usa o code, ele já retorna o access_token.
