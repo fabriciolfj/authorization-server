@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 
 @Configuration
@@ -29,6 +30,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DataSource dataSource;
 
     @Autowired
     private AuthenticationManager authenticationManager; // apenas para o password flow
@@ -41,8 +45,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients
-                .inMemory()
+        clients.jdbc(dataSource);
+                /*.inMemory()
                     .withClient("algafood-web")
                     .secret(passwordEncoder.encode("123"))
                     .authorizedGrantTypes("password", "refresh_token")
@@ -74,7 +78,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     .withClient("faturamento")
                     .secret(passwordEncoder.encode("123"))
                     .authorizedGrantTypes("client_credentials")
-                    .scopes("WRITE", "READ");
+                    .scopes("WRITE", "READ");*/
     }
 
     @Override

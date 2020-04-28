@@ -8,6 +8,10 @@ algafood:
       password: 123456
       keypair-alias: algafood
 
+logging:
+  level:
+    org.springframework: DEBUG
+
 spring:
   datasource:
     hikari:
