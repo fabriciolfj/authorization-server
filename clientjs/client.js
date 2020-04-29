@@ -1,8 +1,8 @@
 const config = {
   clientId: "foodanalytics",
-  clientSecret: "123",
-  authorizeUrl: "http://localhost:8081/oauth/authorize",
-  tokenUrl: "http://localhost:8081/oauth/token",
+  clientSecret: "web123",
+  authorizeUrl: "http://localhost:9090/oauth/authorize",
+  tokenUrl: "http://localhost:9090/oauth/token",
   callbackUrl: "http://localhost:8082", //tem que ser o mesmo host do dns do client, para capturar o rollback
   cozinhasUrl: "http://localhost:9090/cozinhas"
 };

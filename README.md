@@ -44,3 +44,4 @@ Gerando a chave pública
 ```
 openssl x509 -pubkey -noout -in algafood-cert.pem > algafood-pkey.pem
 ```
+
